@@ -15,7 +15,6 @@
       --secondary: #FFF0E6;
       --muted-foreground: #8B7B8B;
       --border: rgba(255, 182, 193, 0.4);
-      --accent: #FFD1DC;
       --radius: 1rem;
     }
 
@@ -32,10 +31,8 @@
       margin: 0 auto;
     }
 
-    /* ── SCREEN TRANSITIONS ── */
-    .screen {
-      animation: fadeUp 0.4s ease both;
-    }
+    /* ── TRANSITIONS ── */
+    .screen { animation: fadeUp 0.4s ease both; }
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(20px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -44,30 +41,83 @@
       from { opacity: 1; transform: translateY(0); }
       to   { opacity: 0; transform: translateY(-20px); }
     }
-    .screen.leaving {
-      animation: fadeOut 0.3s ease both;
-    }
+    .screen.leaving { animation: fadeOut 0.3s ease both; }
 
     /* ── QUIZ HEADER ── */
     .quiz-header {
       text-align: center;
       margin-bottom: 3rem;
       animation: fadeUp 0.4s 0.15s ease both;
+      opacity: 0;
+      animation-fill-mode: both;
     }
     .quiz-header h1 {
-      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-size: clamp(2.2rem, 7vw, 4rem);
       font-weight: 700;
       letter-spacing: -0.02em;
       line-height: 1.1;
-      margin-bottom: 0.75rem;
+      color: #6B6B6B;
+      margin-bottom: 1rem;
     }
     .quiz-header p {
       font-size: 1.1rem;
       color: var(--muted-foreground);
+      max-width: 420px;
+      margin: 0 auto;
+      line-height: 1.5;
     }
 
-    /* ── ITEM LIST ── */
+    /* ── LAYOUT WITH DECORATIONS ── */
+    .quiz-body {
+      position: relative;
+    }
+
+    /* Decorative elements - hidden on small screens */
+    .deco {
+      position: absolute;
+      pointer-events: none;
+      opacity: 0;
+      animation: decoIn 0.5s ease both;
+      animation-fill-mode: both;
+    }
+    @keyframes decoIn {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    @media (max-width: 900px) {
+      .deco { display: none; }
+    }
+
+    .deco-coffee   { width: 110px; height: 110px; right: -140px; top: 20px;    transform: rotate(15deg);  animation-delay: 0.6s; }
+    .deco-woman    { width: 130px; height: 130px; left: -160px;  top: 220px;   transform: rotate(-12deg); animation-delay: 0.7s; }
+    .deco-sunnies  { width: 110px; height: 110px; right: -130px; top: 360px;   transform: rotate(8deg);   animation-delay: 0.8s; }
+    .deco-tote     { width: 120px; height: 120px; left: -170px;  top: 520px;   transform: rotate(-18deg); animation-delay: 0.9s; }
+    .deco-avocado  { width: 120px; height: 120px; right: -150px; top: 680px;   transform: rotate(10deg);  animation-delay: 1.0s; }
+    .deco-candle   { width: 110px; height: 110px; left: -140px;  top: 840px;   transform: rotate(-8deg);  animation-delay: 1.1s; }
+    .deco-camera   { width: 120px; height: 120px; right: -150px; top: 1000px;  transform: rotate(12deg);  animation-delay: 1.2s; }
+    .deco-yoga     { width: 110px; height: 110px; left: -160px;  top: 1160px;  transform: rotate(-15deg); animation-delay: 1.3s; }
+    .deco-succulent{ width: 120px; height: 120px; right: -140px; top: 1310px;  transform: rotate(6deg);   animation-delay: 1.4s; }
+
+    /* Decorative blobs */
+    .blob {
+      position: absolute;
+      pointer-events: none;
+      border-radius: 50%;
+      opacity: 0;
+      animation: decoIn 0.5s ease both;
+    }
+    @media (max-width: 900px) { .blob { display: none; } }
+
+    .blob-1 { width: 80px;  height: 80px;  left: -110px; top: 150px;  background: #FFCCE1; border-radius: 50%;        animation-delay: 0.5s; }
+    .blob-2 { width: 100px; height: 100px; right: -100px; top: 460px; background: #C9B8FF; border-radius: 1.5rem; transform: rotate(12deg); animation-delay: 0.7s; }
+    .blob-3 { width: 90px;  height: 90px;  left: -130px; top: 780px;  background: #FFDAB9; border-radius: 50%;        animation-delay: 0.9s; }
+    .blob-4 { width: 110px; height: 110px; right: -120px; top: 1080px;background: #B5E7A0; border-radius: 1.5rem; transform: rotate(-12deg); animation-delay: 1.1s; }
+
+    /* ── ITEMS ── */
     .items-list {
+      position: relative;
+      z-index: 10;
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
@@ -89,13 +139,8 @@
       opacity: 0;
       animation: slideIn 0.35s ease forwards;
     }
-    .item-btn:hover {
-      transform: scale(1.02);
-      background: var(--secondary);
-    }
-    .item-btn:active {
-      transform: scale(0.98);
-    }
+    .item-btn:hover { transform: scale(1.02); background: var(--secondary); }
+    .item-btn:active { transform: scale(0.98); }
     .item-btn.selected {
       background: var(--primary);
       color: var(--primary-foreground);
@@ -118,11 +163,9 @@
       opacity: 0;
       animation-fill-mode: both;
     }
-    .count-text {
-      color: var(--muted-foreground);
-      font-size: 0.95rem;
-    }
-    .submit-btn {
+    .count-text { color: var(--muted-foreground); font-size: 0.95rem; }
+
+    .submit-btn, .try-again-btn {
       padding: 1rem 3rem;
       background: var(--primary);
       color: var(--primary-foreground);
@@ -134,19 +177,11 @@
       box-shadow: 0 4px 20px rgba(255, 182, 193, 0.5);
       transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.15s ease;
     }
-    .submit-btn:hover:not(:disabled) {
-      transform: scale(1.05);
-      box-shadow: 0 6px 28px rgba(255, 182, 193, 0.65);
-    }
-    .submit-btn:active:not(:disabled) {
-      transform: scale(0.96);
-    }
-    .submit-btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
+    .submit-btn:hover:not(:disabled), .try-again-btn:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(255, 182, 193, 0.65); }
+    .submit-btn:active:not(:disabled), .try-again-btn:active { transform: scale(0.96); }
+    .submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    /* ── LOADING SCREEN ── */
+    /* ── LOADING ── */
     .loading-screen {
       display: flex;
       flex-direction: column;
@@ -156,19 +191,9 @@
       gap: 2rem;
       animation: fadeUp 0.3s ease both;
     }
-    .spinner-wrap {
-      animation: spin 2s linear infinite;
-      display: flex;
-    }
-    @keyframes spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-    .sparkle-icon {
-      width: 64px;
-      height: 64px;
-      color: var(--primary);
-    }
+    .spinner-wrap { animation: spin 2s linear infinite; display: flex; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .sparkle-icon { width: 64px; height: 64px; color: var(--primary); }
     .loading-text {
       font-size: 1.25rem;
       color: var(--muted-foreground);
@@ -177,7 +202,7 @@
       animation-fill-mode: both;
     }
 
-    /* ── RESULTS SCREEN ── */
+    /* ── RESULTS ── */
     .results-screen {
       display: flex;
       flex-direction: column;
@@ -198,7 +223,6 @@
       color: var(--primary);
       letter-spacing: -0.04em;
       line-height: 1;
-      animation: countUp 1.5s ease both;
     }
     .result-message {
       font-size: 1.4rem;
@@ -210,26 +234,9 @@
       animation-fill-mode: both;
     }
     .try-again-btn {
-      padding: 1rem 3rem;
-      background: var(--primary);
-      color: var(--primary-foreground);
-      border: none;
-      border-radius: 9999px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(255, 182, 193, 0.5);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
       animation: fadeUp 0.4s 0.7s ease both;
       opacity: 0;
       animation-fill-mode: both;
-    }
-    .try-again-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 28px rgba(255, 182, 193, 0.65);
-    }
-    .try-again-btn:active {
-      transform: scale(0.96);
     }
   </style>
 </head>
@@ -237,27 +244,104 @@
   <div class="container" id="app"></div>
 
   <script>
-    const ITEMS = [
-      "Portable Chargers", "Cheese", "Christmas Markets", "Banana Bread", "Jess Gylnn",
+    const ALL_ITEMS = [
+      "Portable Chargers", "Cheese", "Christmas Markets", "Banana Bread", "Jess Glynn",
       "True Crime", "Calamari", "High Waisted Jeans", "Winter Wonderland", "Fairy Lights",
       "The Brunch Life", "Pink Gin", "Gavin & Stacey", "Positive Vibes", "River Island",
       "Pornstar Martinis", "M&S Food", "Love Island", "Vegetable Crisps", "Milk Alternatives",
-      "Daily Mail Comments", "Disney", "Free Drugs", "Menthal Cigarettes", "Loungewear",
+      "Daily Mail Comments", "Disney", "Free Drugs", "Menthol Cigarettes", "Loungewear",
       "Glitter", "2-4-1 Cocktails", "Prosecco", "Midi Skirts", "New Tops", "Mac Makeup",
-      "Sending Back Clothes","Chips for the Table", "Blankets/Throws", "The Gram", "Made In Chelsea", "Friends", "Goats Cheese",
-      "Crisps & Dip","Balsamic Vinegar", "Picky Bits", "Prawns", "Water Bottles", "The Great British Bake Off", "Fabric Softner", 
-      "Boots Advantage Card", "Adding handles to their iPhones", "Catch Up TV", "Elderflower", "Hospital Based TV Shows", 
-      "Beetroot", "Guacamole", "Musicals", "Justin Timberlake", "Poached Eggs", "Mini Cheddars", "Lip Balm",
-      "Spending £12 on a Salad", "Stuffed Peppers",
+      "Sending Back Clothes", "Chips for the Table", "Blankets/Throws", "The Gram", "Made In Chelsea",
+      "Friends", "Goats Cheese", "Crisps & Dip", "Balsamic Vinegar", "Picky Bits", "Prawns",
+      "Water Bottles", "The Great British Bake Off", "Fabric Softener", "Boots Advantage Card",
+      "Adding Handles to Their iPhones", "Catch Up TV", "Elderflower", "Hospital Based TV Shows",
+      "Beetroot", "Guacamole", "Musicals", "Justin Timberlake", "Poached Eggs", "Mini Cheddars",
+      "Lip Balm", "Spending £12 on a Salad", "Stuffed Peppers",
     ];
 
-    const state = {
-      selected: new Set(),
-      stage: "quiz", // quiz | loading | results
-      percentage: 0,
+    function getRandomItems() {
+      const shuffled = [...ALL_ITEMS].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, 20);
+    }
+
+    let ITEMS = getRandomItems();
+
+    const SVGS = {
+      coffee: (color) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M60 70h80l-10 80c-1 10-8 15-20 15h-20c-12 0-19-5-20-15l-10-80z" stroke="${color}" stroke-width="4" fill="${color}" opacity="0.2"/>
+        <rect x="55" y="60" width="90" height="15" rx="7" stroke="${color}" stroke-width="4" fill="none"/>
+        <path d="M80 50c0-10 5-15 5-15" stroke="${color}" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M100 45c0-10 5-15 5-15" stroke="${color}" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M120 50c0-10 5-15 5-15" stroke="${color}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      </svg>`,
+      woman: (color) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 40c-25 0-35 15-35 35v10c0 5 2 8 5 8h60c3 0 5-3 5-8v-10c0-20-10-35-35-35z" fill="${color}" opacity="0.3"/>
+        <ellipse cx="100" cy="75" rx="25" ry="30" stroke="${color}" stroke-width="3" fill="none"/>
+        <circle cx="92" cy="70" r="2" fill="${color}"/>
+        <circle cx="108" cy="70" r="2" fill="${color}"/>
+        <path d="M90 82c3 3 7 5 10 5s7-2 10-5" stroke="${color}" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <path d="M75 105c0-15 10-25 25-25s25 10 25 25v50c0 10-5 15-25 15s-25-5-25-15v-50z" stroke="${color}" stroke-width="3" fill="none"/>
+        <path d="M75 110c-10 5-20 10-25 20" stroke="${color}" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <path d="M125 110c10 5 20 10 25 20" stroke="${color}" stroke-width="3" stroke-linecap="round" fill="none"/>
+      </svg>`,
+      sunglasses: (color) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="70" cy="100" rx="35" ry="25" stroke="${color}" stroke-width="4" fill="${color}" opacity="0.3"/>
+        <ellipse cx="130" cy="100" rx="35" ry="25" stroke="${color}" stroke-width="4" fill="${color}" opacity="0.3"/>
+        <path d="M105 100h-10c-5 0-10-5-10-10" stroke="${color}" stroke-width="4" fill="none"/>
+        <path d="M35 100c0-5-5-8-10-8" stroke="${color}" stroke-width="4" stroke-linecap="round" fill="none"/>
+        <path d="M165 100c0-5 5-8 10-8" stroke="${color}" stroke-width="4" stroke-linecap="round" fill="none"/>
+      </svg>`,
+      tote: (color) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="50" y="70" width="100" height="100" rx="5" stroke="${color}" stroke-width="4" fill="${color}" opacity="0.2"/>
+        <path d="M70 70v-15c0-15 10-20 20-20h20c10 0 20 5 20 20v15" stroke="${color}" stroke-width="4" fill="none"/>
+        <line x1="50" y1="85" x2="150" y2="85" stroke="${color}" stroke-width="2" opacity="0.5"/>
+      </svg>`,
+      avocado: (color) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 40c-20 0-35 15-35 40v30c0 30 15 50 35 50s35-20 35-50v-30c0-25-15-40-35-40z" stroke="${color}" stroke-width="4" fill="${color}" opacity="0.2"/>
+        <circle cx="100" cy="100" r="20" stroke="${color}" stroke-width="4" fill="none"/>
+      </svg>`,
+      candle: (color) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="70" y="80" width="60" height="90" rx="5" stroke="${color}" stroke-width="4" fill="${color}" opacity="0.2"/>
+        <line x1="100" y1="80" x2="100" y2="60" stroke="${color}" stroke-width="3"/>
+        <path d="M100 60c-5-10 0-20 0-20s5 10 0 20z" fill="${color}" stroke="${color}" stroke-width="2"/>
+        <rect x="75" y="110" width="50" height="15" rx="2" stroke="${color}" stroke-width="2" fill="none"/>
+      </svg>`,
+      camera: (color) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="40" y="70" width="120" height="80" rx="10" stroke="${color}" stroke-width="4" fill="${color}" opacity="0.2"/>
+        <circle cx="100" cy="110" r="30" stroke="${color}" stroke-width="4" fill="none"/>
+        <circle cx="100" cy="110" r="20" stroke="${color}" stroke-width="3" fill="none"/>
+        <rect x="130" y="85" width="15" height="10" rx="2" stroke="${color}" stroke-width="2" fill="none"/>
+        <circle cx="145" cy="75" r="5" fill="${color}"/>
+      </svg>`,
+      yoga: (color) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="100" cy="100" rx="15" ry="60" stroke="${color}" stroke-width="4" fill="${color}" opacity="0.2"/>
+        <path d="M85 40v120" stroke="${color}" stroke-width="3"/>
+        <path d="M90 40v120" stroke="${color}" stroke-width="2" opacity="0.5"/>
+        <rect x="95" y="70" width="10" height="60" stroke="${color}" stroke-width="3" fill="none"/>
+      </svg>`,
+      succulent: (color) => `<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M70 120h60l-10 40h-40z" stroke="${color}" stroke-width="4" fill="${color}" opacity="0.2"/>
+        <ellipse cx="100" cy="110" rx="20" ry="15" stroke="${color}" stroke-width="3" fill="none"/>
+        <ellipse cx="85" cy="100" rx="15" ry="20" stroke="${color}" stroke-width="3" fill="none" transform="rotate(-30 85 100)"/>
+        <ellipse cx="115" cy="100" rx="15" ry="20" stroke="${color}" stroke-width="3" fill="none" transform="rotate(30 115 100)"/>
+        <ellipse cx="100" cy="85" rx="12" ry="18" stroke="${color}" stroke-width="3" fill="none"/>
+      </svg>`,
     };
 
-    const app = document.getElementById("app");
+    const DECOS = [
+      { key: 'coffee',    cls: 'deco-coffee',    color: '#C77DFF' },
+      { key: 'woman',     cls: 'deco-woman',     color: '#FF6B9D' },
+      { key: 'sunglasses',cls: 'deco-sunnies',   color: '#FFD93D' },
+      { key: 'tote',      cls: 'deco-tote',      color: '#B4E7CE' },
+      { key: 'avocado',   cls: 'deco-avocado',   color: '#A8E6CF' },
+      { key: 'candle',    cls: 'deco-candle',    color: '#FFB5E8' },
+      { key: 'camera',    cls: 'deco-camera',    color: '#AEC6FF' },
+      { key: 'yoga',      cls: 'deco-yoga',      color: '#FFD3B6' },
+      { key: 'succulent', cls: 'deco-succulent', color: '#C9B8FF' },
+    ];
+
+    const state = { selected: new Set(), stage: 'quiz', percentage: 0 };
+    const app = document.getElementById('app');
 
     function getResultMessage(pct) {
       if (pct >= 70) return "You're basically peak bitch energy! ✨";
@@ -270,117 +354,128 @@
       function step(ts) {
         if (!start) start = ts;
         const progress = Math.min((ts - start) / duration, 1);
-        // ease out expo
         const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-        el.textContent = Math.floor(eased * target) + "%";
+        el.textContent = Math.floor(eased * target) + '%';
         if (progress < 1) requestAnimationFrame(step);
       }
       requestAnimationFrame(step);
     }
 
     function renderQuiz() {
-      const div = document.createElement("div");
-      div.className = "screen";
-      div.innerHTML = `
-        <div class="quiz-header">
-          <h1>Things Bitches Like</h1>
-          <p>Select the things you love or own</p>
-        </div>
-        <div class="items-list" id="items-list"></div>
-        <div class="submit-footer">
-          <p class="count-text" id="count-text">0 of ${ITEMS.length} selected</p>
-          <button class="submit-btn" id="submit-btn" disabled>Submit</button>
-        </div>
-      `;
-      app.appendChild(div);
+      const div = document.createElement('div');
+      div.className = 'screen';
 
-      const list = div.querySelector("#items-list");
+      // Header
+      const header = document.createElement('div');
+      header.className = 'quiz-header';
+      header.innerHTML = `<h1>Things Bitches Like</h1><p>Select all of the things you like to find out how much of a basic bitch you are</p>`;
+      div.appendChild(header);
+
+      // Body with decorations
+      const body = document.createElement('div');
+      body.className = 'quiz-body';
+
+      // Blobs
+      [1,2,3,4].forEach(n => {
+        const b = document.createElement('div');
+        b.className = `blob blob-${n}`;
+        body.appendChild(b);
+      });
+
+      // Deco SVGs
+      DECOS.forEach(d => {
+        const el = document.createElement('div');
+        el.className = `deco ${d.cls}`;
+        el.innerHTML = SVGS[d.key](d.color);
+        body.appendChild(el);
+      });
+
+      // Items list
+      const list = document.createElement('div');
+      list.className = 'items-list';
       ITEMS.forEach((item, i) => {
-        const btn = document.createElement("button");
-        btn.className = "item-btn" + (state.selected.has(item) ? " selected" : "");
+        const btn = document.createElement('button');
+        btn.className = 'item-btn' + (state.selected.has(item) ? ' selected' : '');
         btn.textContent = item;
         btn.style.animationDelay = `${i * 0.025}s`;
-        btn.addEventListener("click", () => {
-          if (state.selected.has(item)) {
-            state.selected.delete(item);
-            btn.classList.remove("selected");
-          } else {
-            state.selected.add(item);
-            btn.classList.add("selected");
-          }
-          updateFooter();
+        btn.addEventListener('click', () => {
+          if (state.selected.has(item)) { state.selected.delete(item); btn.classList.remove('selected'); }
+          else { state.selected.add(item); btn.classList.add('selected'); }
+          countEl.textContent = `${state.selected.size} of ${ITEMS.length} selected`;
+          submitBtn.disabled = state.selected.size === 0;
         });
         list.appendChild(btn);
       });
+      body.appendChild(list);
+      div.appendChild(body);
 
-      function updateFooter() {
-        const n = state.selected.size;
-        div.querySelector("#count-text").textContent = `${n} of ${ITEMS.length} selected`;
-        div.querySelector("#submit-btn").disabled = n === 0;
-      }
+      // Footer
+      const footer = document.createElement('div');
+      footer.className = 'submit-footer';
+      const countEl = document.createElement('p');
+      countEl.className = 'count-text';
+      countEl.textContent = `${state.selected.size} of ${ITEMS.length} selected`;
+      const submitBtn = document.createElement('button');
+      submitBtn.className = 'submit-btn';
+      submitBtn.textContent = 'Submit';
+      submitBtn.disabled = state.selected.size === 0;
+      submitBtn.addEventListener('click', () => transition('loading'));
+      footer.appendChild(countEl);
+      footer.appendChild(submitBtn);
+      div.appendChild(footer);
 
-      div.querySelector("#submit-btn").addEventListener("click", () => {
-        transition("loading");
-      });
+      app.appendChild(div);
     }
 
     function renderLoading() {
-      const div = document.createElement("div");
-      div.className = "loading-screen";
+      const div = document.createElement('div');
+      div.className = 'loading-screen';
       div.innerHTML = `
         <div class="spinner-wrap">
           <svg class="sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
           </svg>
         </div>
-        <p class="loading-text">Calculating your bitch level...</p>
-      `;
+        <p class="loading-text">Calculating your bitch level...</p>`;
       app.appendChild(div);
-
       setTimeout(() => {
         state.percentage = Math.round((state.selected.size / ITEMS.length) * 100);
-        transition("results");
+        transition('results');
       }, 2200);
     }
 
     function renderResults() {
-      const div = document.createElement("div");
-      div.className = "results-screen";
+      const div = document.createElement('div');
+      div.className = 'results-screen';
       div.innerHTML = `
         <div class="score-number" id="score-el">0%</div>
         <p class="result-message">${getResultMessage(state.percentage)}</p>
-        <button class="try-again-btn" id="try-again">Try Again</button>
-      `;
+        <button class="try-again-btn" id="try-again">Try Again</button>`;
       app.appendChild(div);
-
-      animateCount(div.querySelector("#score-el"), state.percentage);
-
-      div.querySelector("#try-again").addEventListener("click", () => {
+      animateCount(div.querySelector('#score-el'), state.percentage);
+      div.querySelector('#try-again').addEventListener('click', () => {
         state.selected.clear();
         state.percentage = 0;
-        transition("quiz");
+        ITEMS = getRandomItems();
+        transition('quiz');
       });
     }
 
-    function transition(nextStage) {
+    function transition(next) {
       const current = app.firstChild;
       if (current) {
-        current.classList.add("leaving");
-        setTimeout(() => {
-          current.remove();
-          state.stage = nextStage;
-          render();
-        }, 280);
+        current.classList.add('leaving');
+        setTimeout(() => { current.remove(); state.stage = next; render(); }, 280);
       } else {
-        state.stage = nextStage;
+        state.stage = next;
         render();
       }
     }
 
     function render() {
-      if (state.stage === "quiz") renderQuiz();
-      else if (state.stage === "loading") renderLoading();
-      else if (state.stage === "results") renderResults();
+      if (state.stage === 'quiz') renderQuiz();
+      else if (state.stage === 'loading') renderLoading();
+      else if (state.stage === 'results') renderResults();
     }
 
     render();
