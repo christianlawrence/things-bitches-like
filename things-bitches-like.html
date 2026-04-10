@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Things Bitches Like</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --background: #FFF5F5;
+      --foreground: #3D3D3D;
+      --primary: #FFB6C1;
+      --primary-foreground: #FFFFFF;
+      --secondary: #FFF0E6;
+      --muted-foreground: #8B7B8B;
+      --border: rgba(255, 182, 193, 0.4);
+      --accent: #FFD1DC;
+      --radius: 1rem;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--background);
+      color: var(--foreground);
+      min-height: 100vh;
+      padding: 3rem 1rem;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    /* ── SCREEN TRANSITIONS ── */
+    .screen {
+      animation: fadeUp 0.4s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(-20px); }
+    }
+    .screen.leaving {
+      animation: fadeOut 0.3s ease both;
+    }
+
+    /* ── QUIZ HEADER ── */
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeUp 0.4s 0.15s ease both;
+    }
+    .quiz-header h1 {
+      font-size: clamp(2rem, 6vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+    .quiz-header p {
+      font-size: 1.1rem;
+      color: var(--muted-foreground);
+    }
+
+    /* ── ITEM LIST ── */
+    .items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .item-btn {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border-radius: var(--radius);
+      border: 2px solid var(--border);
+      background: #ffffff;
+      color: var(--foreground);
+      font-size: 1.05rem;
+      font-weight: 500;
+      text-align: left;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+      opacity: 0;
+      animation: slideIn 0.35s ease forwards;
+    }
+    .item-btn:hover {
+      transform: scale(1.02);
+      background: var(--secondary);
+    }
+    .item-btn:active {
+      transform: scale(0.98);
+    }
+    .item-btn.selected {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+      box-shadow: 0 4px 20px rgba(255, 182, 193, 0.5);
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-18px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ── SUBMIT FOOTER ── */
+    .submit-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding-top: 0.5rem;
+      animation: fadeUp 0.4s 0.5s ease both;
+      opacity: 0;
+      animation-fill-mode: both;
+    }
+    .count-text {
+      color: var(--muted-foreground);
+      font-size: 0.95rem;
+    }
+    .submit-btn {
+      padding: 1rem 3rem;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      border-radius: 9999px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255, 182, 193, 0.5);
+      transition: transform 0.15s ease, opacity 0.2s ease, box-shadow 0.15s ease;
+    }
+    .submit-btn:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 0 6px 28px rgba(255, 182, 193, 0.65);
+    }
+    .submit-btn:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+    .submit-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ── LOADING SCREEN ── */
+    .loading-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+      gap: 2rem;
+      animation: fadeUp 0.3s ease both;
+    }
+    .spinner-wrap {
+      animation: spin 2s linear infinite;
+      display: flex;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .sparkle-icon {
+      width: 64px;
+      height: 64px;
+      color: var(--primary);
+    }
+    .loading-text {
+      font-size: 1.25rem;
+      color: var(--muted-foreground);
+      animation: fadeUp 0.4s 0.3s ease both;
+      opacity: 0;
+      animation-fill-mode: both;
+    }
+
+    /* ── RESULTS SCREEN ── */
+    .results-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+      gap: 1.5rem;
+      text-align: center;
+      animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.75); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .score-number {
+      font-size: clamp(5rem, 20vw, 7.5rem);
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.04em;
+      line-height: 1;
+      animation: countUp 1.5s ease both;
+    }
+    .result-message {
+      font-size: 1.4rem;
+      color: var(--muted-foreground);
+      max-width: 360px;
+      line-height: 1.4;
+      animation: fadeUp 0.4s 0.5s ease both;
+      opacity: 0;
+      animation-fill-mode: both;
+    }
+    .try-again-btn {
+      padding: 1rem 3rem;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border: none;
+      border-radius: 9999px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(255, 182, 193, 0.5);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      animation: fadeUp 0.4s 0.7s ease both;
+      opacity: 0;
+      animation-fill-mode: both;
+    }
+    .try-again-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 28px rgba(255, 182, 193, 0.65);
+    }
+    .try-again-btn:active {
+      transform: scale(0.96);
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app"></div>
+
+  <script>
+    const ITEMS = [
+      "Glitter", "Brunch", "Expensive cocktails", "Music festivals", "Iced coffee",
+      "True crime podcasts", "Candles", "Tote bags", "Golden hour photos", "Avocado toast",
+      "Astrology", "Yoga pants", "Bath bombs", "Polaroid cameras", "Succulents",
+      "Planners", "Macarons", "Vintage furniture", "Skincare routines", "Rosé",
+      "Farmers markets", "Cozy socks", "Fairy lights", "Pumpkin spice", "Beach days",
+      "Birkenstocks", "Vintage band tees", "Tarot cards", "Film cameras", "Oat milk lattes",
+    ];
+
+    const state = {
+      selected: new Set(),
+      stage: "quiz", // quiz | loading | results
+      percentage: 0,
+    };
+
+    const app = document.getElementById("app");
+
+    function getResultMessage(pct) {
+      if (pct >= 70) return "You're basically peak bitch energy! ✨";
+      if (pct >= 40) return "Solid bitch vibes! 💅";
+      return "Still discovering your inner bitch! 🌸";
+    }
+
+    function animateCount(el, target, duration = 1500) {
+      let start = null;
+      function step(ts) {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        // ease out expo
+        const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+        el.textContent = Math.floor(eased * target) + "%";
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function renderQuiz() {
+      const div = document.createElement("div");
+      div.className = "screen";
+      div.innerHTML = `
+        <div class="quiz-header">
+          <h1>Things Bitches Like</h1>
+          <p>Select the things you love or own</p>
+        </div>
+        <div class="items-list" id="items-list"></div>
+        <div class="submit-footer">
+          <p class="count-text" id="count-text">0 of ${ITEMS.length} selected</p>
+          <button class="submit-btn" id="submit-btn" disabled>Submit</button>
+        </div>
+      `;
+      app.appendChild(div);
+
+      const list = div.querySelector("#items-list");
+      ITEMS.forEach((item, i) => {
+        const btn = document.createElement("button");
+        btn.className = "item-btn" + (state.selected.has(item) ? " selected" : "");
+        btn.textContent = item;
+        btn.style.animationDelay = `${i * 0.025}s`;
+        btn.addEventListener("click", () => {
+          if (state.selected.has(item)) {
+            state.selected.delete(item);
+            btn.classList.remove("selected");
+          } else {
+            state.selected.add(item);
+            btn.classList.add("selected");
+          }
+          updateFooter();
+        });
+        list.appendChild(btn);
+      });
+
+      function updateFooter() {
+        const n = state.selected.size;
+        div.querySelector("#count-text").textContent = `${n} of ${ITEMS.length} selected`;
+        div.querySelector("#submit-btn").disabled = n === 0;
+      }
+
+      div.querySelector("#submit-btn").addEventListener("click", () => {
+        transition("loading");
+      });
+    }
+
+    function renderLoading() {
+      const div = document.createElement("div");
+      div.className = "loading-screen";
+      div.innerHTML = `
+        <div class="spinner-wrap">
+          <svg class="sparkle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+          </svg>
+        </div>
+        <p class="loading-text">Calculating your bitch level...</p>
+      `;
+      app.appendChild(div);
+
+      setTimeout(() => {
+        state.percentage = Math.round((state.selected.size / ITEMS.length) * 100);
+        transition("results");
+      }, 2200);
+    }
+
+    function renderResults() {
+      const div = document.createElement("div");
+      div.className = "results-screen";
+      div.innerHTML = `
+        <div class="score-number" id="score-el">0%</div>
+        <p class="result-message">${getResultMessage(state.percentage)}</p>
+        <button class="try-again-btn" id="try-again">Try Again</button>
+      `;
+      app.appendChild(div);
+
+      animateCount(div.querySelector("#score-el"), state.percentage);
+
+      div.querySelector("#try-again").addEventListener("click", () => {
+        state.selected.clear();
+        state.percentage = 0;
+        transition("quiz");
+      });
+    }
+
+    function transition(nextStage) {
+      const current = app.firstChild;
+      if (current) {
+        current.classList.add("leaving");
+        setTimeout(() => {
+          current.remove();
+          state.stage = nextStage;
+          render();
+        }, 280);
+      } else {
+        state.stage = nextStage;
+        render();
+      }
+    }
+
+    function render() {
+      if (state.stage === "quiz") renderQuiz();
+      else if (state.stage === "loading") renderLoading();
+      else if (state.stage === "results") renderResults();
+    }
+
+    render();
+  </script>
+</body>
+</html>
